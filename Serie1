@@ -51,7 +51,7 @@ public class Philosopher implements Runnable {
 			// exit thread, unsuccessful termination
 			System.exit(1);
 		} else {
-			Philosopher[] philosophers = new Philosopher[Integer.parseInt(args[1])];
+			Philosopher[] philosophers = new Philosopher[Integer.parseInt(args[0])];
 			Object[] sticks = new Object[philosophers.length];
 			for (int i = 0; i < sticks.length; i++) {
 				sticks[i] = new Object();
