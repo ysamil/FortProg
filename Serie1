@@ -1,0 +1,70 @@
+package eins;
+
+import java.util.Random;
+
+public class Philosopher implements Runnable {
+	private int num;
+	private Object stick1;
+	private Object stick2;
+	
+	
+	public Philosopher (int num, Object stick1, Object stick2) {
+		this.num = num;
+		this.stick1 = stick1;
+		this.stick2 = stick2;
+	}
+
+	private void snooze() throws InterruptedException {
+				Thread.sleep(((int) (Math.random() * 100)));
+			
+
+	}
+	
+	public void run() {
+		try {
+		while (true) {
+		//	System.out.println(Thread.currentThread().getName() + " Thinking");
+			snooze();
+			synchronized (stick1) {
+				System.out.println(Thread.currentThread().getName() + " grab stick2");
+				synchronized(stick2) {
+					System.out.println(Thread.currentThread().getName() + " grab stick1");
+					//System.out.println(Thread.currentThread().getName() + " Eating");
+					snooze();
+					System.out.println(Thread.currentThread().getName() + " put down stick1");
+			}
+				System.out.println(Thread.currentThread().getName() + " Put down stick2. Thinking ");
+				snooze();
+		}
+		}
+	} catch (InterruptedException e) {
+		Thread.currentThread().interrupt();
+		return;
+	}
+	}
+
+		
+	
+	public static void main(String[] args) throws Exception{
+		if (args.length < 1) {
+			System.out.println("No.");
+			// exit thread, unsuccessful termination
+			System.exit(1);
+		} else {
+			Philosopher[] philosophers = new Philosopher[Integer.parseInt(args[1])];
+			Object[] sticks = new Object[philosophers.length];
+			for (int i = 0; i < sticks.length; i++) {
+				sticks[i] = new Object();
+			}
+			for (int y = 0; y < philosophers.length; y++) {
+				Object stick1 = sticks[y];
+				Object stick2 = sticks[(y+1)%sticks.length];
+				
+					philosophers[y] = new Philosopher(y, stick1, stick2);
+			
+				 Thread philo = new Thread(philosophers[y],"Philosopher" + (y+1));
+				philo.start();
+			}
+		}
+	}
+}
